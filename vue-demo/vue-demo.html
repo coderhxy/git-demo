@@ -50,13 +50,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>1</td>
-          <td>宝马</td>
+        <tr v-for="item in list" :key="item.id">
+          <td>{{ item.id }}</td>
+          <td>{{ item.name }}</td>
           <td>
             <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="customSwitch1">
-              <label class="custom-control-label" for="customSwitch1">已禁用</label>
+              <input type="checkbox" class="custom-control-input" :id="'customSwitch' + item.id" v-model="item.status">
+              <label class="custom-control-label" :for="'customSwitch' + item.id" v-if="item.status">已启用</label>
+              <label class="custom-control-label" :for="'customSwitch' + item.id" v-else>已禁用</label>
             </div>
           </td>
           <td>2022-02-02 11:34:07</td>
@@ -68,6 +69,21 @@
     </table>
   </div>
 
+  <script src="./lib/vue-2.6.12.js"></script>
+
+  <script>
+    const vm = new Vue({
+      el: '#app',
+      data: {
+        //品牌列表数据
+        list: [
+        { id: 1, name: '宝马', status: true, time: new Date() },
+        { id: 2, name: '奔驰', status: true, time: new Date() },
+        { id: 3, name: '奥迪', status: true, time: new Date() }
+        ]
+      }
+    })
+  </script>
 </body>
 
 </html>
