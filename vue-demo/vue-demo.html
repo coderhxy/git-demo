@@ -20,14 +20,15 @@
       </div>
       <div class="card-body">
         <!-- 添加品牌的表单区域 -->
-        <form>
+        <!-- form表单有submit事件 -->
+        <form @submit.prevent="add">
           <div class="form-row align-items-center">
             <div class="col-auto">
               <div class="input-group mb-2">
                 <div class="input-group-prepend">
                   <div class="input-group-text">品牌名称</div>
                 </div>
-                <input type="text" class="form-control" placeholder="请输入品牌名称">
+                <input type="text" class="form-control" placeholder="请输入品牌名称" v-model.trim="brand">
               </div>
             </div>
             <div class="col-auto">
@@ -60,9 +61,9 @@
               <label class="custom-control-label" :for="'customSwitch' + item.id" v-else>已禁用</label>
             </div>
           </td>
-          <td>2022-02-02 11:34:07</td>
+          <td>{{item.time | dateFormat}}</td>
           <td>
-            <a href="javascript:;">删除</a>
+            <a href="javascript:;" @click="remove(item.id)">删除</a>
           </td>
         </tr>
       </tbody>
@@ -70,17 +71,46 @@
   </div>
 
   <script src="./lib/vue-2.6.12.js"></script>
+  <script src="./lib/dayjs.min.js"></script>
 
   <script>
+    Vue.filter('dateFormat', function(time) {
+      const dtStr = dayjs(time).format('YYYY-MM-DD HH:mm:ss')
+      return dtStr
+    })
+
     const vm = new Vue({
       el: '#app',
       data: {
+        //用户输入的品牌名称
+        brand: '',
+        //定义id值，以便追加
+        nextId: 4,
         //品牌列表数据
         list: [
         { id: 1, name: '宝马', status: true, time: new Date() },
         { id: 2, name: '奔驰', status: true, time: new Date() },
         { id: 3, name: '奥迪', status: true, time: new Date() }
         ]
+      },
+      methods:{
+        remove(id) {
+          this.list = this.list.filter(item => item.id !== id)
+        },
+
+        add() {
+          //如果判断到输入框内容为空时，则return出去
+          if (this.brand === '') return alert('请输入一个有效值')
+          //否则获取到用户输入的信息
+          this.list.push({
+            id: this.nextId,
+            name: this.brand,
+            status: true,
+            time: new Date()
+          })
+          this.nextId++
+          this.brand = ''
+        }
       }
     })
   </script>
